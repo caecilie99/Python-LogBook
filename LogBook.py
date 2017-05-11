@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from time import strftime, gmtime
 from gi import require_version
 
 require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
+
 
 
 class LogBookWindow(gtk.Window):
@@ -14,7 +16,7 @@ class LogBookWindow(gtk.Window):
 
     def __init__(self):
         gtk.Window.__init__(self)
-        gtk.Window.set_title(self, "Dat issen Test")
+        gtk.Window.set_title(self, "Logbuch der USS Enterprise")
         gtk.Window.set_default_size(self, 600, 400)
         self.set_border_width(10)
         self.mainGrid = gtk.Grid()
@@ -31,17 +33,14 @@ class LogBookWindow(gtk.Window):
         # create button1
         self.button1 = gtk.Button(label="Save")
         self.button1.connect('clicked', self.__change_label)
-        self.mainGrid.attach(self.button1, 0, 2, 1, 1)
+        self.mainGrid.attach(self.button1, 1, 1, 1, 1)
 
         # create button2
         self.button2 = gtk.Button(label="Quit")
         self.button2.connect("clicked", gtk.main_quit)
-        self.mainGrid.attach(self.button2, 0, 3, 1, 1)
+        self.mainGrid.attach(self.button2, 2, 1, 1, 1)
 
         self.store = gtk.ListStore(str, str)
-        self.store.append(("First", "Entry 1"))
-        self.store.append(("Second", "Entry 2"))
-        self.store.append(("Third", "Entry 3"))
 
         self.__create_view()
 
@@ -55,10 +54,11 @@ class LogBookWindow(gtk.Window):
         column = gtk.TreeViewColumn('Eintrag', renderer, text=1)
         self.view.append_column(column)
 
-        self.mainGrid.attach(self.view, 0, 4, 1, 1)
+        self.mainGrid.attach(self.view, 0, 2, 3, 4)
 
-    def __change_label(self):
-        self.store.append(("neu", self.entry.get_text()))
+    def __change_label(self, widget):
+        t = strftime('%d.%m.%Y %H:%M:%S', gmtime())  # timestamp
+        self.store.append((t, self.entry.get_text()))
 
 
 logBookWindow = LogBookWindow()
