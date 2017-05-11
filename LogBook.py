@@ -23,20 +23,32 @@ class LogBookWindow(gtk.Window):
         # create label
         self.label = gtk.Label()
         self.label.set_markup("<b>Your entry</b>")
-        self.mainGrid.attach(self.label)
+        self.mainGrid.add(self.label)
 
         self.entry = gtk.Entry()
-        self.mainGrid.attach(self.entry)
+        self.mainGrid.attach(self.entry, 0, 1, 1, 1)
 
         # create button1
         self.button1 = gtk.Button(label="Save")
         self.button1.connect('clicked', self.change_label, self.entry)
-        self.mainGrid.attach(self.button1)
+        self.mainGrid.attach(self.button1, 0, 2, 1, 1)
 
         # create button2
         self.button2 = gtk.Button(label="Quit")
         self.button2.connect("clicked", gtk.main_quit)
-        self.mainGrid.attach(self.button2)
+        self.mainGrid.attach(self.button2, 0, 3, 1, 1)
+
+    def __create_view(self):
+        self.view = gtk.TreeView(self.store)
+        renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn('Sternzeit', renderer, text=0)
+        column.set_sort_column_id(0)
+        self.view.append_column(column)
+
+        column = gtk.TreeViewColumn('Eintrag', renderer, text=1)
+        self.view.append_column(column)
+
+        self.mainGrid.attach(self.view, 0, 4, 1, 1)
 
     def change_label(self):
         self.label.set_markup(self.entry.g)
