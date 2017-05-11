@@ -30,7 +30,7 @@ class LogBookWindow(gtk.Window):
 
         # create button1
         self.button1 = gtk.Button(label="Save")
-        self.button1.connect('clicked', self.change_label, self.entry)
+        self.button1.connect('clicked', self.__change_label)
         self.mainGrid.attach(self.button1, 0, 2, 1, 1)
 
         # create button2
@@ -57,7 +57,7 @@ class LogBookWindow(gtk.Window):
 
         self.mainGrid.attach(self.view, 0, 4, 1, 1)
 
-    def change_label(self):
+    def __change_label(self):
         self.store.append(("neu", self.entry.get_text()))
 
 
