@@ -38,6 +38,13 @@ class LogBookWindow(gtk.Window):
         self.button2.connect("clicked", gtk.main_quit)
         self.mainGrid.attach(self.button2, 0, 3, 1, 1)
 
+        self.store = gtk.ListStore(str, str)
+        self.store.append(("First", "Entry 1"))
+        self.store.append(("Second", "Entry 2"))
+        self.store.append(("Third", "Entry 3"))
+
+        self.__create_view()
+
     def __create_view(self):
         self.view = gtk.TreeView(self.store)
         renderer = gtk.CellRendererText()
