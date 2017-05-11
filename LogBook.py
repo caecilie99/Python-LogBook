@@ -58,7 +58,7 @@ class LogBookWindow(gtk.Window):
         self.mainGrid.attach(self.view, 0, 4, 1, 1)
 
     def change_label(self):
-        self.label.set_markup(self.entry.g)
+        self.store.append(("neu", self.entry.get_text()))
 
 
 logBookWindow = LogBookWindow()
