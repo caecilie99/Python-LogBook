@@ -1,3 +1,22 @@
 GtkGrid {
-    background-image: url("starwars.jpg");
+    background-image: url("startrek.jpg");
+    background-repeat: no-repeat;
+}
+
+GtkEntry {
+    background-color: black;
+    color : green;
+}
+
+GtkButton GtkLabel{
+    background-color: transparent;
+    color : black;
+}
+GtkLabel, GtkTreeView {
+    background-color: transparent;
+    color : white;
+}
+GtkTreeView GtkButton, GtkTreeView GtkLabel{
+    background-color: transparent;
+    color : white;
 }

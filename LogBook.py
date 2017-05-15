@@ -155,18 +155,27 @@ class LogBookWindow(gtk.Window):
         '''
         self.conn.close()
 
+    def main_quit(self, widget, event):
+        '''
+        close db-connection and quit
+        :param event:
+        :param data:
+        :return:
+        '''
+        self.__disconnect()
+        gtk.main_quit()
+
     def quit(self, widget):
         '''
         close db-connection and quit
-        :param widget:
+        :param event:
+        :param data:
         :return:
         '''
-        print("quit")
         self.__disconnect()
-        gtk.main_quit(self, widget)
-
+        gtk.main_quit()
 
 logBookWindow = LogBookWindow()
-logBookWindow.connect('delete-event', logBookWindow.quit)
+logBookWindow.connect('delete-event', logBookWindow.main_quit)
 logBookWindow.show_all()
 gtk.main()
