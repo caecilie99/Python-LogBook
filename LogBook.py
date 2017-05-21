@@ -22,7 +22,7 @@ class LogBookWindow(gtk.Window):
 
         # set tittle & size for window
         gtk.Window.set_title(self, "Logbuch der USS Enterprise")
-        gtk.Window.set_default_size(self, 600, 400)
+        gtk.Window.set_default_size(self, 640, 300)
         self.set_border_width(10)
 
         # load css-style
@@ -36,22 +36,23 @@ class LogBookWindow(gtk.Window):
         self.label = gtk.Label()
         self.label.set_markup("<b>Your entry</b>")
         # add label to maingrid
-        self.mainGrid.add(self.label)
+        #self.mainGrid.add(self.label)
+        self.mainGrid.attach(self.label, 0, 0, 2, 1)
 
         # create input field for logbook entry
         self.entry = gtk.Entry()
         # attach
-        self.mainGrid.attach(self.entry, 0, 1, 1, 1)
+        self.mainGrid.attach_next_to(self.entry, self.label, gtk.PositionType.BOTTOM, 2, 1)
 
         # create save-button
         self.btn_save = gtk.Button(label="Save")
         self.btn_save.connect('clicked', self.__new_entry)
-        self.mainGrid.attach(self.btn_save, 1, 1, 1, 1)
+        self.mainGrid.attach_next_to(self.btn_save, self.entry, gtk.PositionType.RIGHT, 1, 1)
 
         # create quit-button
         self.btn_quit = gtk.Button(label="Quit")
         self.btn_quit.connect("clicked", self.quit)
-        self.mainGrid.attach(self.btn_quit, 2, 1, 1, 1)
+        self.mainGrid.attach_next_to(self.btn_quit, self.btn_save, gtk.PositionType.RIGHT, 1, 1)
 
         # create liststore to save entries
         self.store = gtk.ListStore(str, str)
@@ -93,17 +94,15 @@ class LogBookWindow(gtk.Window):
         # set renderer
         renderer = gtk.CellRendererText()
         # create column
-        column = gtk.TreeViewColumn('Sternzeit', renderer, text=0)
-        # set sort
-        column.set_sort_column_id(0)
+        column_date = gtk.TreeViewColumn('Sternzeit', renderer, text=0)
         # add column to view
-        self.view.append_column(column)
+        self.view.append_column(column_date)
         # create next column
-        column = gtk.TreeViewColumn('Eintrag', renderer, text=1)
+        column_text = gtk.TreeViewColumn('Eintrag', renderer, text=1)
         # add column to view
-        self.view.append_column(column)
+        self.view.append_column(column_text)
         # add view to main grid
-        self.mainGrid.attach(self.view, 0, 2, 3, 4)
+        self.mainGrid.attach(self.view, 0, 2, 4, 4)
 
     def __new_entry(self, widget):
         '''
@@ -116,8 +115,11 @@ class LogBookWindow(gtk.Window):
         tmp_time = strftime('%d.%m.%Y %H:%M:%S', gmtime())
         # get text from input
         tmp_text = self.entry.get_text()
+        # clear entry
+        self.entry.set_text("")
         # append entry to store
-        self.store.append((tmp_time, tmp_text))
+        #self.store.append((tmp_time, tmp_text))
+        self.store.insert(0, (tmp_time, tmp_text))
         # inssert entry in db
         self.cur.execute('INSERT INTO logbook VALUES (?,?)', (tmp_time, tmp_text))
         self.conn.commit()
@@ -143,7 +145,7 @@ class LogBookWindow(gtk.Window):
         :return:
         '''
         # load entries from db
-        log_etnries = self.cur.execute('SELECT * FROM logbook')
+        log_etnries = self.cur.execute('SELECT * FROM logbook ORDER BY sternzeit DESC ')
         # add all entries to store
         for ds in log_etnries:
             self.store.append((ds[0], ds[1]))
